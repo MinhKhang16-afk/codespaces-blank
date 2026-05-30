@@ -1,80 +1,120 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Ứng dụng Chuyển Đổi & Tra Cứu</title>
+    <meta charset="UTF-8">
+    <title>Northwind Premium Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-        h2 { color: #222; }
-        .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; max-width: 450px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        h3 { color: #333; margin-top: 0; }
-        .result { color: #2e7d32; font-weight: bold; margin-top: 10px; padding: 5px; background-color: #e8f5e9; border-radius: 3px; display: inline-block; }
-        button { cursor: pointer; padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background-color: #f0f0f0; }
-        button:hover { background-color: #e0e0e0; }
-        input[type="number"], input[type="text"], select { padding: 5px; border-radius: 4px; border: 1px solid #ccc; margin-right: 5px; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 40px; background-color: #f8fafc; color: #1e293b;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .container { width: 100%; max-width: 800px; }
+        h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 30px; letter-spacing: -0.5px; text-align: center; }
+        
+        /* CSS cho các thẻ chức năng (Card) */
+        .card { 
+            background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 20px; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+        .card h3 { margin-top: 0; margin-bottom: 15px; color: #0f172a; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;}
+        
+        /* Giao diện form nhập liệu */
+        .form-group { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        label { font-size: 14px; color: #475569; font-weight: 500; }
+        .form-input, select { 
+            padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 8px; 
+            font-size: 14px; outline: none; transition: border-color 0.2s; min-width: 180px; background: white;
+        }
+        .form-input:focus, select:focus { border-color: #4f46e5; }
+        
+        /* Nút bấm Premium */
+        .btn { 
+            display: inline-block; text-decoration: none; padding: 10px 20px; 
+            background-color: #4f46e5; color: white; border-radius: 8px; 
+            font-size: 14px; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s;
+        }
+        .btn:hover { background-color: #4338ca; }
+        .btn-secondary { background-color: #0f172a; }
+        .btn-secondary:hover { background-color: #334155; }
+        
+        /* Vùng hiển thị kết quả */
+        .result-box { margin-left: auto; font-size: 15px; font-weight: 600; color: #059669; background: #e6f4ea; padding: 8px 16px; border-radius: 6px; }
+        
+        /* Nút chuyển hướng lớn ở dưới */
+        .footer-action { text-align: center; margin-top: 25px; }
     </style>
 </head>
 <body>
 
-    <h2>BÀI GIỮA KỲ: ỨNG DỤNG CHUYỂN ĐỔI</h2>
+    <div class="container">
+        <h1>BÀI GIỮA KỲ: HỆ THỐNG ĐIỀU HƯỚNG & CHUYỂN ĐỔI</h1>
 
-    <div class="section">
-        <h3>1. Chuyển đổi Độ C sang Độ F</h3>
-        <form action="<%= request.getContextPath() %>/chuyen-doi" method="post">
-            <input type="hidden" name="action" value="convertCelsius">
-            Nhập độ C: <input type="number" step="any" name="celsius" required>
-            <button type="submit">Chuyển đổi</button>
-        </form>
-        <% if ("convertCelsius".equals(request.getAttribute("resultType"))) { %>
-            <div class="result">Kết quả: <%= request.getAttribute("resultValue") %> °F</div>
-        <% } %>
+        <div class="card">
+            <h3>🌡️ 1. Chuyển đổi Độ C sang Độ F</h3>
+            <form action="convert" method="POST" class="form-group">
+                <input type="hidden" name="type" value="c2f">
+                <label>Nhập độ C:</label>
+                <input type="number" step="any" name="celsius" class="form-input" placeholder="Ví dụ: 37" required>
+                <button type="submit" class="btn">Chuyển đổi</button>
+                
+                <% if(request.getAttribute("resultC2F") != null) { %>
+                    <div class="result-box">Kết quả: <%= request.getAttribute("resultC2F") %> °F</div>
+                <% } %>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>💵 2. Chuyển đổi USD sang VND</h3>
+            <form action="convert" method="POST" class="form-group">
+                <input type="hidden" name="type" value="usd2vnd">
+                <label>Nhập số tiền (USD):</label>
+                <input type="number" step="any" name="usd" class="form-input" placeholder="Ví dụ: 100" required>
+                <button type="submit" class="btn">Chuyển đổi</button>
+                
+                <% if(request.getAttribute("resultUSD") != null) { %>
+                    <div class="result-box">Kết quả: <%= request.getAttribute("resultUSD") %> VND</div>
+                <% } %>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>✨ 3. Tra cứu Giá Vàng</h3>
+            <form action="gold" method="GET" class="form-group">
+                <label>Chọn loại vàng:</label>
+                <select name="goldType">
+                    <option value="SJC">Vàng SJC</option>
+                    <option value="9999">Vàng Nhẫn 9999</option>
+                    <option value="24K">Vàng 24K</option>
+                </select>
+                <button type="submit" class="btn">Xem giá</button>
+                
+                <% if(request.getAttribute("goldPrice") != null) { %>
+                    <div class="result-box">Giá hiện tại: <%= request.getAttribute("goldPrice") %></div>
+                <% } %>
+            </form>
+        </div>
+
+        <div class="card" style="border: 1px dashed #4f46e5; background: #f5f3ff;">
+            <h3 style="color: #4f46e5;">📦 4. Quản lý kho hàng Northwind (Nâng cao)</h3>
+            <p style="font-size: 14px; color: #64748b; margin-top: 0; margin-bottom: 15px;">
+                Hệ thống kết nối trực tiếp đến Cơ sở dữ liệu Microsoft SQL Server trong Docker để truy xuất, lọc và tìm kiếm danh sách sản phẩm theo thời gian thực.
+            </p>
+            <div class="form-group">
+                <form action="products" method="GET" style="display: flex; gap: 10px; width: 100%;">
+                    <input type="text" name="searchKeyword" class="form-input" style="flex: 1;" placeholder="Nhập tên sản phẩm để tìm nhanh (Ví dụ: Chai, Chang...)" />
+                    <button type="submit" class="btn btn-search">Tìm ngay 🔍</button>
+                </form>
+            </div>
+            <div style="margin-top: 15px; border-top: 1px solid #e9e3ff; padding-top: 12px; text-align: center;">
+                <a href="products" style="color: #4f46e5; font-size: 14px; font-weight: 600; text-decoration: none;">👉 Xem toàn bộ danh sách sản phẩm mẫu Northwind</a>
+            </div>
+        </div>
+
     </div>
-
-    <div class="section">
-        <h3>2. Chuyển đổi USD sang VND</h3>
-        <form action="<%= request.getContextPath() %>/chuyen-doi" method="post">
-            <input type="hidden" name="action" value="convertUsd">
-            Nhập số tiền (USD): <input type="number" step="any" name="usd" required>
-            <button type="submit">Chuyển đổi</button>
-        </form>
-        <% if ("convertUsd".equals(request.getAttribute("resultType"))) { %>
-            <div class="result">Kết quả: <%= request.getAttribute("resultValue") %> VND</div>
-        <% } %>
-    </div>
-
-    <div class="section">
-        <h3>3. Tra cứu Giá Vàng</h3>
-        <form action="<%= request.getContextPath() %>/chuyen-doi" method="post">
-            <input type="hidden" name="action" value="getGoldPrice">
-            Chọn loại vàng:
-            <select name="goldType">
-                <option value="SJC">Vàng SJC</option>
-                <option value="9999">Vàng 9999</option>
-                <option value="24K">Vàng 24K</option>
-            </select>
-            <button type="submit">Xem giá</button>
-        </form>
-        <% if ("getGoldPrice".equals(request.getAttribute("resultType"))) { %>
-            <div class="result">Giá vàng: <%= request.getAttribute("resultValue") %></div>
-        <% } %>
-    </div>
-
-    <div class="section" style="border-color: #2196F3; background-color: #e3f2fd;">
-        <h3 style="color: #0d47a1;">4. Tìm nhanh sản phẩm (Nâng cao)</h3>
-        <form action="<%= request.getContextPath() %>/san-pham" method="get">
-            Nhập tên sản phẩm: 
-            <input type="text" name="searchKeyword" placeholder="Ví dụ: iPhone, Laptop, Chuột..." style="width: 200px;">
-            <button type="submit" style="background-color: #2196F3; color: white; border: none; font-weight: bold;">Tìm ngay</button>
-        </form>
-    </div>
-
-    <hr style="max-width: 450px; margin-left: 0; margin-top: 20px;">
-    <p><a href="<%= request.getContextPath() %>/san-pham" style="color: #2196F3; text-decoration: none; font-weight: bold;">👉 Xem toàn bộ danh sách sản phẩm mẫu</a></p>
 
 </body>
 </html>
-<hr>
-<div style="text-align: center; margin-top: 20px;">
-    <a <a href="products">Xem danh sách sản phẩm Northwind</a>
-        🗃️ CLICK ĐỂ XEM DANH SÁCH SẢN PHẨM (LAB 5 - SQL SERVER)
-    </a>
-</div>

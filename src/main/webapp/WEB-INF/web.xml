@@ -9,14 +9,4 @@
         <welcome-file>chuyenDoi.jsp</welcome-file>
     </welcome-file-list>
 
-    <servlet>
-        <servlet-name>ListProductServlet</servlet-name>
-        <servlet-class>controller.ListProductServlet</servlet-class>
-    </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>ListProductServlet</servlet-name>
-        <url-pattern>/products</url-pattern>
-    </servlet-mapping>
-
 </web-app>
