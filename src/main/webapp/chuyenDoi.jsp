@@ -72,3 +72,9 @@
 
 </body>
 </html>
+<hr>
+<div style="text-align: center; margin-top: 20px;">
+    <a href="products" style="font-size: 16px; color: #4CAF50; font-weight: bold; text-decoration: none;">
+        🗃️ CLICK ĐỂ XEM DANH SÁCH SẢN PHẨM (LAB 5 - SQL SERVER)
+    </a>
+</div>

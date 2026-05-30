@@ -1,3 +1,6 @@
 /workspaces/codespaces-blank/src/main/java/model/SanPham.java
+/workspaces/codespaces-blank/src/main/java/controller/ListProductServlet.java
+/workspaces/codespaces-blank/src/main/java/dao/ProductDAO.java
 /workspaces/codespaces-blank/src/main/java/controller/ChuyenDoiServlet.java
-/workspaces/codespaces-blank/src/main/java/controller/SanPhamServlet.java
+/workspaces/codespaces-blank/src/main/java/model/Product.java
+/workspaces/codespaces-blank/src/main/java/context/DBContext.java

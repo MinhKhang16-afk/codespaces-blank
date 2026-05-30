@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="model.Product"%>
-<%@page import="dao.ProductDAO"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +17,7 @@
 </head>
 <body>
 
-    <h2>Northwind Products</h2>
+    <h2>Northwind Products List</h2>
     <a href="chuyenDoi.jsp" class="btn">⏪ Quay lại trang Chuyển đổi nhiệt độ</a>
 
     <table>
@@ -29,15 +28,7 @@
             <th>Stock</th>
         </tr>
         <%
-            // Cách 1: Thử lấy dữ liệu do Servlet truyền qua
             List<Product> listProduct = (List<Product>) request.getAttribute("listProduct");
-            
-            // Cách 2: Nếu listProduct trống (do chạy trực tiếp file jp), tự gọi DAO cứu cánh
-            if (listProduct == null) {
-                ProductDAO dao = new ProductDAO();
-                listProduct = dao.getAllProducts();
-            }
-
             if (listProduct != null && !listProduct.isEmpty()) {
                 for (Product p : listProduct) {
         %>
@@ -53,7 +44,7 @@
         %>
         <tr>
             <td colspan="4" style="text-align:center; color: red; padding: 20px; font-weight: bold;">
-                ⚠️ Kết nối CSDL thất bại hoặc không tìm thấy dữ liệu! Hãy chắc chắn bạn đã chạy lệnh nạp SQL ở câu trước thành công.
+                ⚠️ Không tìm thấy dữ liệu! Hãy chắc chắn rằng bạn đã kích hoạt chạy lệnh nạp SQL ở Bước 1.
             </td>
         </tr>
         <% } %>

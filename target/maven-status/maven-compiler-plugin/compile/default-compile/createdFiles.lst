@@ -1,3 +1,6 @@
-controller/SanPhamServlet.class
-controller/ChuyenDoiServlet.class
+context/DBContext.class
 model/SanPham.class
+dao/ProductDAO.class
+model/Product.class
+controller/ChuyenDoiServlet.class
+controller/ListProductServlet.class
