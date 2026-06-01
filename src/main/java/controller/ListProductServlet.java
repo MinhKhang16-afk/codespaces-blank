@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ListProductServlet", urlPatterns = {"/products"})
+@WebServlet(name = "ListProductServlet", urlPatterns = {"/timkiemsanpham"})
 public class ListProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
