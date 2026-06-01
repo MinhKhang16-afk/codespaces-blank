@@ -2,6 +2,7 @@ package dao;
 
 import context.DBContext;
 import model.Product;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,21 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
+
+    public ProductDAO() {
+    }
+
+    private void closeResources(Connection conn, PreparedStatement ps, ResultSet rs) {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock FROM Products";
+        String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, "
+                   + "QuantityPerUnit, UnitPrice, UnitsInStock "
+                   + "FROM Products";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             conn = new DBContext().getConnection();
-            if (conn == null) {
-                System.out.println("❌ LỖI: Không thể kết nối đến SQL Server. Kiểm tra lại DBContext!");
-                return list;
-            }
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
+
             while (rs.next()) {
                 Product p = new Product(
                         rs.getInt("ProductID"),
@@ -39,19 +54,29 @@ public class ProductDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (rs != null) rs.close(); if (ps != null) ps.close(); if (conn != null) conn.close(); } catch (Exception e) {}
+            closeResources(conn, ps, rs);
         }
         return list;
     }
-    public List<Product> searchProductsByName(String keyword) {
+
+    // ĐÃ SỬA: Chuyển chuỗi ghép dòng truyền thống, xóa bỏ hoàn toàn dấu triple-quotes (""") lỗi
+    public List<Product> searchProduct(String keyword) {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock "
-                   + "FROM Products WHERE ProductName LIKE ?";
+        String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, "
+                   + "QuantityPerUnit, UnitPrice, UnitsInStock "
+                   + "FROM Products "
+                   + "WHERE ProductName LIKE ?";
+
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + keyword + "%"); // Tìm kiếm theo từ khóa chứa trong tên
+            ps.setString(1, "%" + keyword + "%");
             rs = ps.executeQuery();
+
             while (rs.next()) {
                 Product p = new Product(
                         rs.getInt("ProductID"),
@@ -67,7 +92,7 @@ public class ProductDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { if (rs != null) rs.close(); if (ps != null) ps.close(); if (conn != null) conn.close(); } catch (Exception e) {}
+            closeResources(conn, ps, rs);
         }
         return list;
     }
